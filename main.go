@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnfercher/maroto/v2/pkg/config"
 	"github.com/johnfercher/maroto/v2/pkg/consts/align"
+	"github.com/johnfercher/maroto/v2/pkg/consts/border"
 	"github.com/johnfercher/maroto/v2/pkg/consts/fontstyle"
 	"github.com/johnfercher/maroto/v2/pkg/core"
 	"github.com/johnfercher/maroto/v2/pkg/props"
@@ -95,7 +96,11 @@ func getTransactions() []core.Row {
             text.NewCol(3, "TestCaseName", props.Text{Size: 9, Align: align.Center, Style: fontstyle.Bold}),
             text.NewCol(1, "Result", props.Text{Size: 9, Align: align.Center, Style: fontstyle.Bold}),
             text.NewCol(2, "Status", props.Text{Size: 9, Align: align.Center, Style: fontstyle.Bold}),
-        ),
+        ).WithStyle(&props.Cell{
+			BorderType: border.Full,
+		},
+
+		),
     }
 
     var contentsRow []core.Row
@@ -105,19 +110,22 @@ func getTransactions() []core.Row {
     }*/
 
     for i, content := range contents {
-		time.Sleep(1*time.Second)
-        r := row.New(4).Add(
+        r := row.New(10).Add(
             col.New(1),
 			text.NewCol(1, strconv.Itoa(i+1), props.Text{Size: 8, Align: align.Center}),
-            text.NewCol(2, content[0], props.Text{Size: 8, Align: align.Center}),
-            text.NewCol(3, content[1], props.Text{Size: 8, Align: align.Center}),
-            text.NewCol(1, content[2], props.Text{Size: 8, Align: align.Center}),
-            text.NewCol(2, content[3], props.Text{Size: 8, Align: align.Center}),
-        )
-        if i%2 == 0 {
-            gray := getGrayColor()
-            r.WithStyle(&props.Cell{BackgroundColor: gray})
-        }
+            text.NewCol(2, content[0], props.Text{Size: 10, Align: align.Center}),
+            text.NewCol(3, content[1], props.Text{Size: 10, Align: align.Center}),
+            text.NewCol(1, content[2], props.Text{Size: 10, Align: align.Center}),
+            text.NewCol(2, content[3], props.Text{Size: 10, Align: align.Center}),
+        ).WithStyle(&props.Cell{
+			BorderType: border.Full,
+		})
+		fmt.Println(i," ",content[2])
+        if content[2] == "Pass" {
+            r.WithStyle(&props.Cell{BackgroundColor: getGreenColor()})
+        }else{
+			r.WithStyle(&props.Cell{BackgroundColor: getLightRedColor()})
+		}
 
         contentsRow = append(contentsRow, r)
     }
@@ -146,6 +154,20 @@ func getRedColor()*props.Color{
 		Red: 181,
 		Green: 48,
 		Blue: 0,
+		}
+}
+func getLightRedColor()*props.Color{
+	return &props.Color{
+		Red: 213,
+		Green: 101,
+		Blue: 101,
+		}
+}
+func getGreenColor()*props.Color{
+	return &props.Color{
+		Red: 35,
+		Green: 239,
+		Blue: 109,
 		}
 }
 
